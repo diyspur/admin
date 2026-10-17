@@ -1,0 +1,355 @@
+/* DIYSPUR Design Tokens — Nimble Design System (Light & Dark) */
+:root {
+  /* Type primitives — Nimble typography system */
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Newsreader", "Charter", "Georgia", "Cambria", "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-body);
+
+  /* Nimble modular scale & clamps (Mobile First fluid sizing) */
+  --text-display-xl: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
+  --text-display-lg: clamp(1.75rem, 1.25rem + 2.2vw, 2.75rem);
+  --text-display: 2.25rem;
+  --text-h1: 1.875rem;
+  --text-h2: 1.5rem;
+  --text-title: 1.25rem;
+  --text-title-sm: 1.1rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+
+  --leading-display: 1.06;
+  --leading-h1: 1.15;
+  --leading-h2: 1.25;
+  --leading-body: 1.6;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-display: 700;
+
+  /* Legacy type scale aliases for backward compatibility */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: clamp(2.2rem, 5.5vw, 4.5rem);
+
+  /* Spacing primitives (--space-1 to --space-32: 4px to 128px) */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem;  /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem;    /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem;  /* 24px */
+  --space-8: 2rem;    /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem;   /* 48px */
+  --space-16: 4rem;   /* 64px */
+  --space-20: 5rem;   /* 80px */
+  --space-24: 6rem;   /* 96px */
+  --space-32: 8rem;   /* 128px */
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-button: 999px;
+  --radius-card: 16px;
+  --radius-large: 24px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Animation & layout primitives */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --container: 1120px;
+  --container-wide: 1240px;
+  --nav-height: 64px;
+
+  /* Progress shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.14);
+  --shadow-brand: 0 12px 32px color-mix(in srgb, var(--brand) 28%, transparent);
+}
+
+/* =====================================================================
+   Light theme (default) — Nimble Design System
+   ===================================================================== */
+:root,
+:root[data-theme="light"],
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Nimble Brand & Accent Colors */
+  --brand: #005bff;
+  --brand-hover: #0049cc;
+  --brand-active: #003dad;
+  --brand-text: #ffffff;
+  --positive: #009e66;
+  --positive-text: #087a52;
+  --negative: #d84848;
+  --negative-text: #c13f3f;
+  --modified: #005bff;
+  --untracked: #8e5ae8;
+  --addition-highlight: #00cd83;
+  --deletion-highlight: #fd5555;
+
+  /* Nimble Backgrounds & Surfaces */
+  --background: #ffffff;
+  --background-light: #fafafa;
+  --background-dark: #f5f6f8;
+  --surface-1: #ffffff;
+  --surface-2: #fafafa;
+  --surface-3: #f2f3f5;
+
+  /* Nimble Typography Colors */
+  --text-primary: #282a2f;
+  --text-secondary: #5a5e66;
+  --text-tertiary: #8a8d94;
+
+  /* Nimble Borders & Separators */
+  --separator: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.20);
+  --hover-overlay: rgba(0, 0, 0, 0.05);
+
+  /* Mockup Tokens (Diff Viewer / Code Preview / Window) */
+  --mock-background: #fbfbfc;
+  --mock-sidebar: #f5f6f8;
+  --mock-border: rgba(0, 0, 0, 0.12);
+  --mock-diff-add: rgba(0, 158, 102, 0.12);
+  --mock-diff-del: rgba(216, 72, 72, 0.12);
+  --mock-text-primary: #282a2f;
+  --mock-text-secondary: #5a5e66;
+  --mock-text-tertiary: #8a8d94;
+
+  /* Semantic Compatibility Bridge for existing DIYSPUR components */
+  --color-bg: var(--background);
+  --color-surface: var(--surface-1);
+  --color-elevated: var(--surface-2);
+  --color-overlay: var(--surface-3);
+  --color-fg: var(--text-primary);
+  --color-primary: var(--brand);
+  --color-primary-hover: var(--brand-hover);
+  --color-accent: var(--modified);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-muted: var(--text-secondary);
+  --color-subtle: var(--text-tertiary);
+  --color-on-primary: var(--brand-text);
+  --color-danger: var(--negative);
+  --color-success: var(--positive);
+  --gradient-brand: linear-gradient(135deg, var(--brand), #4b86ff 56%, #8e5ae8);
+  --shadow-card: var(--shadow-sm);
+  --glow-primary: 0 0 24px color-mix(in srgb, var(--brand) 22%, transparent);
+
+  /* Nimble Tints & Focus Rings */
+  --brand-tint-08: color-mix(in srgb, var(--brand) 8%, transparent);
+  --brand-tint-12: color-mix(in srgb, var(--brand) 12%, transparent);
+  --brand-tint-16: color-mix(in srgb, var(--brand) 16%, transparent);
+  --hairline: rgba(0, 0, 0, 0.06);
+  --focus-ring: color-mix(in srgb, var(--brand) 55%, transparent);
+  --background-very-dark: #eef0f3;
+
+  /* Component tokens */
+  --button-bg: var(--brand);
+  --button-fg: var(--brand-text);
+  --button-radius: var(--radius-button);
+  --card-bg: var(--surface-1);
+  --card-border: var(--border);
+  --card-radius: var(--radius-card);
+  --input-bg: var(--surface-1);
+  --input-border: var(--border);
+  --input-focus: var(--brand);
+}
+
+/* =====================================================================
+   Dark theme — Nimble Design System
+   ===================================================================== */
+:root[data-theme="dark"],
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Nimble Brand & Accent Colors (WCAG AA Contrast Compliant on Dark Backgrounds) */
+  --brand: #4589ff;
+  --brand-hover: #5e9bff;
+  --brand-active: #78aeff;
+  --brand-text: #ffffff;
+  --positive: #009e66;
+  --positive-text: #5fe0ab;
+  --negative: #d84848;
+  --negative-text: #ff8d8d;
+  --modified: #3b82f6;
+  --untracked: #8e5ae8;
+  --addition-highlight: #00cd83;
+  --deletion-highlight: #fd5555;
+
+  /* Nimble Backgrounds & Surfaces */
+  --background: #0b0d12;
+  --background-light: #10131a;
+  --background-dark: #151820;
+  --surface-1: #141820;
+  --surface-2: #191d26;
+  --surface-3: #202530;
+
+  /* Nimble Typography Colors */
+  --text-primary: #f7f8fb;
+  --text-secondary: #b8bdc8;
+  --text-tertiary: #858c99;
+
+  /* Nimble Borders & Separators */
+  --separator: rgba(255, 255, 255, 0.10);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  --hover-overlay: rgba(255, 255, 255, 0.08);
+
+  /* Mockup Tokens (Diff Viewer / Code Preview / Window) */
+  --mock-background: #0b0d12;
+  --mock-sidebar: #10131a;
+  --mock-border: rgba(255, 255, 255, 0.12);
+  --mock-diff-add: rgba(95, 224, 171, 0.16);
+  --mock-diff-del: rgba(255, 141, 141, 0.16);
+  --mock-text-primary: #f7f8fb;
+  --mock-text-secondary: #b8bdc8;
+  --mock-text-tertiary: #858c99;
+
+  /* Semantic Compatibility Bridge for existing DIYSPUR components */
+  --color-bg: var(--background);
+  --color-surface: var(--surface-1);
+  --color-elevated: var(--surface-2);
+  --color-overlay: var(--surface-3);
+  --color-fg: var(--text-primary);
+  --color-primary: var(--brand);
+  --color-primary-hover: var(--brand-hover);
+  --color-accent: var(--modified);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-muted: var(--text-secondary);
+  --color-subtle: var(--text-tertiary);
+  --color-on-primary: var(--brand-text);
+  --color-danger: var(--negative-text);
+  --color-success: var(--positive-text);
+  --gradient-brand: linear-gradient(135deg, var(--brand), #4b86ff 56%, #a78bfa);
+  --shadow-card: 0 16px 48px rgba(0, 0, 0, 0.38);
+  /* Nimble Tints & Focus Rings */
+  --brand-tint-08: color-mix(in srgb, var(--brand) 12%, transparent);
+  --brand-tint-12: color-mix(in srgb, var(--brand) 18%, transparent);
+  --brand-tint-16: color-mix(in srgb, var(--brand) 24%, transparent);
+  --hairline: rgba(255, 255, 255, 0.06);
+  --focus-ring: color-mix(in srgb, var(--brand) 65%, transparent);
+  --background-very-dark: #1b202a;
+
+  /* Component tokens */
+  --button-bg: var(--brand);
+  --button-fg: var(--brand-text);
+  --button-radius: var(--radius-button);
+  --card-bg: var(--surface-1);
+  --card-border: var(--border);
+  --card-radius: var(--radius-card);
+  --input-bg: var(--surface-1);
+  --input-border: var(--border);
+  --input-focus: var(--brand);
+}
+
+/* =====================================================================
+   Auto Dark Mode via system preference (when no explicit light theme set)
+   ===================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --brand: #005bff;
+    --brand-hover: #1f6fff;
+    --brand-active: #3884ff;
+    --brand-text: #ffffff;
+    --positive: #009e66;
+    --positive-text: #5fe0ab;
+    --negative: #d84848;
+    --negative-text: #ff8d8d;
+    --modified: #3b82f6;
+    --untracked: #8e5ae8;
+    --addition-highlight: #00cd83;
+    --deletion-highlight: #fd5555;
+
+    --background: #0b0d12;
+    --background-light: #10131a;
+    --background-dark: #151820;
+    --surface-1: #141820;
+    --surface-2: #191d26;
+    --surface-3: #202530;
+
+    --text-primary: #f7f8fb;
+    --text-secondary: #b8bdc8;
+    --text-tertiary: #858c99;
+
+    --separator: rgba(255, 255, 255, 0.10);
+    --border: rgba(255, 255, 255, 0.14);
+    --border-strong: rgba(255, 255, 255, 0.24);
+    --hover-overlay: rgba(255, 255, 255, 0.08);
+
+    --mock-background: #0b0d12;
+    --mock-sidebar: #10131a;
+    --mock-border: rgba(255, 255, 255, 0.12);
+    --mock-diff-add: rgba(95, 224, 171, 0.16);
+    --mock-diff-del: rgba(255, 141, 141, 0.16);
+    --mock-text-primary: #f7f8fb;
+    --mock-text-secondary: #b8bdc8;
+    --mock-text-tertiary: #858c99;
+
+    --color-bg: var(--background);
+    --color-surface: var(--surface-1);
+    --color-elevated: var(--surface-2);
+    --color-overlay: var(--surface-3);
+    --color-fg: var(--text-primary);
+    --color-primary: var(--brand);
+    --color-primary-hover: var(--brand-hover);
+    --color-accent: var(--modified);
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-muted: var(--text-secondary);
+    --color-subtle: var(--text-tertiary);
+    --color-on-primary: var(--brand-text);
+    --color-danger: var(--negative-text);
+    --color-success: var(--positive-text);
+    --gradient-brand: linear-gradient(135deg, var(--brand), #4b86ff 56%, #a78bfa);
+    --shadow-card: 0 16px 48px rgba(0, 0, 0, 0.38);
+    --glow-primary: 0 0 28px rgba(0, 91, 255, 0.32);
+
+    /* Nimble Tints & Focus Rings */
+    --brand-tint-08: color-mix(in srgb, var(--brand) 12%, transparent);
+    --brand-tint-12: color-mix(in srgb, var(--brand) 18%, transparent);
+    --brand-tint-16: color-mix(in srgb, var(--brand) 24%, transparent);
+    --hairline: rgba(255, 255, 255, 0.06);
+    --focus-ring: color-mix(in srgb, var(--brand) 65%, transparent);
+    --background-very-dark: #1b202a;
+
+    --button-bg: var(--brand);
+    --button-fg: var(--brand-text);
+    --button-radius: var(--radius-button);
+    --card-bg: var(--surface-1);
+    --card-border: var(--border);
+    --card-radius: var(--radius-card);
+    --input-bg: var(--surface-1);
+    --input-border: var(--border);
+    --input-focus: var(--brand);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
