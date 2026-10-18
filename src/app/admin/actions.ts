@@ -115,19 +115,17 @@ export async function updateBook(input: unknown): Promise<AdminResult> {
   if (!session) return { ok: false, message: 'Acesso restrito à equipe editorial.', code: 'forbidden' };
   const { id, title, synopsis, coverUrl, totalPages } = parsed.data;
 
-  const { data: saved, error } = await session.client
-    .from('books')
-    .update({ title, synopsis: synopsis || null, cover_url: coverUrl || null, total_pages: totalPages })
-    .eq('id', id)
-    .select('id,slug')
-    .maybeSingle();
+  const { error } = await session.client.rpc('update_editorial_book', {
+    p_id: id,
+    p_title: title,
+    p_synopsis: synopsis || null,
+    p_cover: coverUrl || null,
+    p_pages: totalPages ?? null,
+  });
 
   if (error) return { ok: false, ...mapDatabaseError(error.code) };
-  if (!saved) return { ok: false, code: 'not_found', message: 'O livro não foi encontrado.' };
-
-  await audit(session.client, session.userId, 'book', id, 'update', { title, synopsis, cover_url: coverUrl || null, total_pages: totalPages });
   revalidatePath('/admin/books');
-  return { ok: true, message: 'Livro salvo.' };
+  return { ok: true, message: 'Livro salvo com sucesso.' };
 }
 
 export async function updateSeason(input: unknown): Promise<AdminResult> {
@@ -136,11 +134,17 @@ export async function updateSeason(input: unknown): Promise<AdminResult> {
   const session = await adminContext();
   if (!session) return { ok: false, message: 'Acesso restrito à equipe editorial.', code: 'forbidden' };
   const { id, title, description, status } = parsed.data;
-  const { error } = await session.client.from('seasons').update({ title, description: description || null, status }).eq('id', id);
+
+  const { error } = await session.client.rpc('update_editorial_season', {
+    p_id: id,
+    p_title: title,
+    p_description: description || null,
+    p_status: status,
+  });
+
   if (error) return { ok: false, ...mapDatabaseError(error.code) };
-  await audit(session.client, session.userId, 'season', id, 'update', { title, description, status });
   revalidatePath(`/admin/seasons/${id}`);
-  return { ok: true, message: 'Temporada salva.' };
+  return { ok: true, message: 'Temporada salva com sucesso.' };
 }
 
 export async function updateChapter(input: unknown): Promise<AdminResult> {
@@ -156,58 +160,21 @@ export async function updateChapter(input: unknown): Promise<AdminResult> {
     if (!youtubeUrl || !/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(youtubeUrl)) {
       return { ok: false, message: 'Adicione um replay válido do YouTube antes de publicar.', code: 'validation' };
     }
-    const { data: questions, error: questionsError } = await session.client
-      .from('quiz_questions')
-      .select('options,correct_idx,chapter_reference')
-      .eq('chapter_id', id);
-
-    if (questionsError) {
-      return { ok: false, message: 'Não foi possível verificar as perguntas antes da publicação.', code: 'unavailable' };
-    }
-
-    if (!questions || questions.length !== 5) {
-      return {
-        ok: false,
-        message: 'Publique exatamente cinco perguntas revisadas para este capítulo.',
-        code: 'validation',
-      };
-    }
-
-    if (
-      questions.some(
-        (question: { options?: unknown; correct_idx?: unknown; chapter_reference?: unknown }) =>
-          !Array.isArray(question.options) ||
-          question.options.length < 2 ||
-          typeof question.correct_idx !== 'number' ||
-          question.correct_idx < 0 ||
-          question.correct_idx >= question.options.length ||
-          !question.chapter_reference,
-      )
-    ) {
-      return { ok: false, message: 'Revise as perguntas e a referência de leitura antes de publicar.', code: 'validation' };
-    }
   }
 
   const effectiveDraft = isDraft ?? !publishedAt;
 
-  const { error } = await session.client
-    .from('chapters')
-    .update({
-      title,
-      reading_range: readingRange || null,
-      summary: summary || null,
-      youtube_url: youtubeUrl || null,
-      published_at: publishedAt,
-      is_draft: effectiveDraft,
-    })
-    .eq('id', id);
+  const { error } = await session.client.rpc('update_editorial_chapter', {
+    p_id: id,
+    p_title: title,
+    p_reading_range: readingRange || null,
+    p_summary: summary || null,
+    p_youtube_url: youtubeUrl || null,
+    p_published_at: publishedAt,
+    p_is_draft: effectiveDraft,
+  });
 
   if (error) return { ok: false, ...mapDatabaseError(error.code) };
-  await audit(session.client, session.userId, 'chapter', id, shouldPublish ? 'publish_or_schedule' : 'save_draft', {
-    title,
-    published_at: publishedAt,
-    is_draft: effectiveDraft,
-  });
   revalidatePath('/admin');
   return { ok: true, message: shouldPublish ? 'Capítulo publicado/agendado.' : 'Rascunho salvo.' };
 }

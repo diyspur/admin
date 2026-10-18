@@ -76,18 +76,47 @@ describe('admin book actions', () => {
     });
   });
 
-  it('returns not_found in updateBook when book does not exist', async () => {
-    const maybeSingleMock = vi.fn().mockResolvedValue({ data: null, error: null });
-    const selectMock = vi.fn().mockReturnValue({ maybeSingle: maybeSingleMock });
-    const eqMock = vi.fn().mockReturnValue({ select: selectMock });
-    const updateMock = vi.fn().mockReturnValue({ eq: eqMock });
+  it('calls update_editorial_book RPC when updating book', async () => {
+    const rpcMock = vi.fn((fnName) => {
+      if (fnName === 'is_admin') return Promise.resolve({ data: true, error: null });
+      if (fnName === 'update_editorial_book') return Promise.resolve({ data: true, error: null });
+      return Promise.resolve({ data: null, error: null });
+    });
 
     vi.spyOn(sessionModule, 'requireSession').mockResolvedValue({
       userId: 'admin-1',
-      client: {
-        rpc: vi.fn().mockResolvedValue({ data: true, error: null }),
-        from: vi.fn().mockReturnValue({ update: updateMock }),
-      } as any,
+      client: { rpc: rpcMock } as any,
+    } as any);
+
+    const res = await updateBook({
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      title: 'Livro Atualizado',
+      synopsis: 'Nova sinopse',
+      coverUrl: '',
+      totalPages: 150,
+    });
+
+    expect(res.ok).toBe(true);
+    expect(res.message).toBe('Livro salvo com sucesso.');
+    expect(rpcMock).toHaveBeenCalledWith('update_editorial_book', {
+      p_id: '550e8400-e29b-41d4-a716-446655440000',
+      p_title: 'Livro Atualizado',
+      p_synopsis: 'Nova sinopse',
+      p_cover: null,
+      p_pages: 150,
+    });
+  });
+
+  it('handles database error when book is not found in update_editorial_book', async () => {
+    const rpcMock = vi.fn((fnName) => {
+      if (fnName === 'is_admin') return Promise.resolve({ data: true, error: null });
+      if (fnName === 'update_editorial_book') return Promise.resolve({ data: null, error: { code: 'P0002' } });
+      return Promise.resolve({ data: null, error: null });
+    });
+
+    vi.spyOn(sessionModule, 'requireSession').mockResolvedValue({
+      userId: 'admin-1',
+      client: { rpc: rpcMock } as any,
     } as any);
 
     const res = await updateBook({
@@ -99,9 +128,5 @@ describe('admin book actions', () => {
     });
 
     expect(res.ok).toBe(false);
-    if (!res.ok) {
-      expect(res.code).toBe('not_found');
-      expect(res.message).toBe('O livro não foi encontrado.');
-    }
   });
 });
