@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import '@/styles/global.css';
 import { AdminNav } from '@/components/admin/admin-nav';
-import { AutoAuth } from '@/components/admin/auto-auth';
 
 export const metadata: Metadata = {
   title: {
@@ -42,7 +41,6 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
-        <AutoAuth />
         <AdminNav />
         <main id="conteudo" style={{ minHeight: 'calc(100vh - 70px)', paddingBottom: '60px' }}>
           {children}

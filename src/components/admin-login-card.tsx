@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export function AdminLoginCard() {
@@ -8,41 +8,36 @@ export function AdminLoginCard() {
   const searchParams = useSearchParams();
   const redirectTarget = searchParams.get('redirect') || '/admin';
 
-  const [email, setEmail] = useState('admin@diyspur.com');
-  const [password, setPassword] = useState('Admin@Diyspur2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<string>('Autenticando automaticamente...');
+  const [status, setStatus] = useState<string | null>(null);
 
-  const performAutoLogin = async () => {
+  const performDevBypassLogin = async () => {
     setLoading(true);
-    setStatus('Conectando como Administrador...');
+    setStatus('Conectando em modo de desenvolvimento...');
     try {
       const res = await fetch('/api/auth/auto-login', { method: 'POST' });
       if (res.ok) {
-        setStatus('Autenticado com sucesso! Redirecionando...');
+        setStatus('Sessão administrativa iniciada. Redirecionando...');
         setTimeout(() => {
           router.replace(redirectTarget);
           router.refresh();
-        }, 500);
+        }, 400);
       } else {
-        setStatus('Auto-login aguardando confirmação. Clique abaixo.');
+        setStatus('Não foi possível iniciar o modo desenvolvimento.');
         setLoading(false);
       }
     } catch {
-      setStatus('Erro de conexão no auto-login. Clique para tentar novamente.');
+      setStatus('Erro de conexão com o servidor.');
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // Dispara auto-login imediato na chegada
-    performAutoLogin();
-  }, []);
-
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setStatus('Autenticando...');
+    setStatus('Autenticando credenciais...');
     try {
       const res = await fetch('/api/auth/auto-login', {
         method: 'POST',
@@ -50,11 +45,11 @@ export function AdminLoginCard() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
-        setStatus('Sucesso! Redirecionando...');
+        setStatus('Autenticado com sucesso! Redirecionando...');
         router.replace(redirectTarget);
         router.refresh();
       } else {
-        setStatus('Falha na autenticação.');
+        setStatus('Credenciais inválidas ou acesso não autorizado.');
         setLoading(false);
       }
     } catch {
@@ -89,29 +84,37 @@ export function AdminLoginCard() {
         </p>
       </div>
 
-      <div
-        style={{
-          padding: '12px 16px',
-          borderRadius: '8px',
-          backgroundColor: 'rgba(245, 158, 11, 0.1)',
-          border: '1px solid rgba(245, 158, 11, 0.3)',
-          marginBottom: '20px',
-          fontSize: '0.875rem',
-          textAlign: 'center',
-        }}
-      >
-        <span>{status}</span>
-      </div>
+      {status && (
+        <div
+          style={{
+            padding: '12px 16px',
+            borderRadius: '8px',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            marginBottom: '20px',
+            fontSize: '0.875rem',
+            textAlign: 'center',
+          }}
+        >
+          <span>{status}</span>
+        </div>
+      )}
 
       <button
         type="button"
         className="button"
         disabled={loading}
-        onClick={performAutoLogin}
+        onClick={performDevBypassLogin}
         style={{ width: '100%', marginBottom: '20px' }}
       >
-        {loading ? 'Entrando…' : '⚡ Entrar como Administrador (1 clique)'}
+        {loading ? 'Aguarde…' : '⚡ Entrar como Administrador (Dev Bypass)'}
       </button>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '16px 0', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+        <div style={{ flex: 1, height: '1px', background: 'var(--border-subtle, rgba(255,255,255,0.1))' }} />
+        <span>ou com email e senha</span>
+        <div style={{ flex: 1, height: '1px', background: 'var(--border-subtle, rgba(255,255,255,0.1))' }} />
+      </div>
 
       <form onSubmit={handleManualSubmit}>
         <label>
@@ -121,6 +124,7 @@ export function AdminLoginCard() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="admin@diyspur.com"
             required
           />
         </label>
@@ -131,10 +135,11 @@ export function AdminLoginCard() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••••••"
             required
           />
         </label>
-        <button type="submit" className="button button-quiet" disabled={loading} style={{ width: '100%' }}>
+        <button type="submit" className="button button-quiet" disabled={loading} style={{ width: '100%', marginTop: '12px' }}>
           Entrar com credenciais
         </button>
       </form>

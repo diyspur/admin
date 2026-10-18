@@ -19,13 +19,6 @@ export async function refreshSupabaseSession(request: NextRequest) {
     },
   });
 
-  const devAuth = process.env.NEXT_PUBLIC_ADMIN_DEV_AUTH === 'true' || request.cookies.get('admin_dev_session')?.value === 'true';
-
-  // Se auto-login / dev auth estiver ativo, garante o cookie admin_dev_session
-  if (devAuth && !request.cookies.get('admin_dev_session')) {
-    response.cookies.set('admin_dev_session', 'true', { path: '/', httpOnly: false, sameSite: 'lax' });
-  }
-
   // Refresh session se houver tokens
   await supabase.auth.getClaims();
 
